@@ -295,3 +295,9 @@
   file: path=/tmp/csp state=absent mode=0750
   when: conf_contentstation_enable is defined and conf_contentstation_enable == true
   tags: [ woodwing, contentstation, contentstationplugin ]
+
+ - name: set timestamps on BrandLogonManager so they match smart_serverplugins
+   shell: sudo touch -a -m -t {{ conf_brandlogonmanager_timestamp }} /var/www/vhosts/{{ item.key }}/enterprise/server/plugins/BrandLogonManager/*
+   with_dict: '{{ conf_vhosts_common }}'
+   when: item.value.state == "enabled" and item.value.type == "woodwing"
+   tags: [ woodwing, contentstation, contentstationplugin ]
